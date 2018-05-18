@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        window.ready=function(){
+            alert($("#txtPageNum").val())
+        };
+    </script>
+</head>
+<style>
+    /*分页样式*/
+    .pagelist{ clear:both; display:block; margin:0 0 20px 0; }
+    .pagelist:after{ clear:both; content:"."; display:block; height:0; visibility:hidden; }
+    .pagelist .l-btns{ display:block; float:left; margin:0 5px 0 0; padding:0 10px; border:1px solid #dbdbdb; height:28px; overflow:hidden; }
+    .pagelist .l-btns span{ font-size:12px; color:#333; line-height:28px; }
+    .pagelist .l-btns .pagenum{ display:inline-block; margin:0 5px; padding:0 5px; border:1px solid #dbdbdb; border-top:0; border-bottom:0; width:30px; height:28px; line-height:28px; font-size:12px; color:#333; text-align:center; vertical-align:top; overflow:hidden; }
+
+    /*==分页右边下一页等的按钮样式===*/
+    div.default{ margin:0; padding:0; font-family:"Microsoft YaHei",Verdana; font-size:12px; }
+    div.default a,div.default span{ display:inline-block; margin:0 0 0 -1px; padding:4px 12px; line-height:20px; height:20px; border:1px solid #e1e1e1; background:#fff; color:#333; text-decoration:none; vertical-align:middle;}
+    div.default span:first-child{ border-left:1px solid #e1e1e1; }
+    div.default a:hover{ color:#666; background:#eee; }
+    div.default span.current{ color:#fff; background:#488FCD; border-color:#488FCD; cursor:default;}
+    div.default span.disabled{ color:#999; background:#fff;cursor:default; }
+    div.default a.disabled{ color:#999; background:#fff;cursor:default; }
+</style>
+<body>
+
+<div class="pagelist">
+    <div class="l-btns">
+        <span>显示</span><input name="txtPageNum" type="text" oninput="txtchange(this)" onblur="getData()"  id="txtPageNum" class="pagenum" value="5"/><span>条/页</span>
+    </div>
+    <div id="PageContent" class="default"></div>
+</div>
+
+
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="page.js" charset="utf-8"></script>
+<script>
+    document.ready=function(){
+        alert($("#txtPageNum").val())
+    };
+    function getData() {
+        page.pageSize = pageSize;
+//        ajaxobj.getList();//失去焦点时进行查询列表数据(ajax请求数据时使用这条)
+        pager($("#PageContent"), {//（ajax请求数据时不用这句）
+            count:  Math.ceil(page.totalRow/page.pageSize),
+            index: page.pageIndex,
+            countsize: page.totalRow,
+            pageChange: function (index) {
+                page.pageIndex = index;
+            }
+        });
+    }
+    function txtchange(t) {
+        page.pageIndex = 1;
+        var n = parseInt($(t).val());
+        $(t).val(n > 0 ? n : 0);
+        pageSize = n > 0 ? n : 0;
+    }
+
+    var page = {
+        pageIndex: 1,//当前页
+        pageSize: 5,//显示条数
+        pageCount: 4,//总页数
+        totalRow: 20//总条数
+    };
+    var pageSize=page.pageSize;//显示条数
+
+//    初始设置（ajax请求数据时不用这句）
+    pager($("#PageContent"), {
+        count: page.pageCount,
+        index: page.pageIndex,
+        countsize: page.totalRow,
+        pageChange: function (index) {
+            page.pageIndex = index;
+        }
+    });
+
+//    ajax请求数据使用方式
+//    var dataList=[];
+//    var ajaxobj = {
+//        getList: function () {
+//            var param = {
+//                pageindex: page.pageIndex,//当前页
+//                pagesize: page.pageSize,
+//            };
+//            basicAjax("", "get", param, function (result) {
+//                if (result && result.code == 0) {
+//                    dataList = result.data;
+//                    //获取列表
+//                    page = {
+//                        pageIndex: result.pagedata.pageindex,
+//                        pageSize: result.pagedata.pagesize,
+//                        totalRow: result.pagedata.rowscount,
+//                        pageCount: Math.ceil(result.pagedata.rowscount/result.pagedata.pagesize)
+//                    };
+//
+//                    pager($("#PageContent"), {
+//                        count: page.pageCount,
+//                        index: page.pageIndex,
+//                        countsize: page.totalRow,
+//                        pageChange: function (index) {
+//                            page.pageIndex = index;
+//                            ajaxobj.getList();
+//                        }
+//                    });
+//
+//                } else {
+//                    dataList = [];
+////                    layer.msg(result.msg || '获取数据失败', { icon: 5, anim: 0 });
+//                }
+//            })
+//        }
+//    };
+
+</script>
+</body>
+</html>
