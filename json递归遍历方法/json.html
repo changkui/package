@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<script>
+    var data =
+            [
+                {
+                    "id": "1",
+                    "text": "民事案由(2008版)",
+                    "state": {
+                        "opened": true,
+                        "disabled": true
+                    },
+                    "children":
+                            [
+                                {
+                                    "id": "01",
+                                    "text": "人格权纠纷",
+                                    "children":
+                                            [
+                                                {
+                                                    "id": "001",
+                                                    "text": "人格权纠纷",
+                                                }
+                                            ]
+                                }
+                            ]
+                },
+                {
+                    "id": "2",
+                    "text": "bbbbbb"
+                }
+            ];
+
+
+    //   用于遍历树形json并修改键名： 我的json递归函数
+    function jsonRecursion(arrays,chlidren){
+        var newarr=[];
+        if(chlidren){
+//            alert(typeof chlidren)
+            newarr=chlidren;
+        }
+        for(var i=0 ; i<arrays.length; i++){
+//            console.log(arrays[i]);
+            var obj = {
+                "id":arrays[i].id,
+                "name":arrays[i].text
+            };
+            if(arrays[i].children!=undefined&&arrays[i].children instanceof Array){
+                obj.children=[];
+                newarr.push(obj);
+                jsonRecursion(arrays[i].children,obj.children);
+            }else{
+                newarr.push(obj);
+            }
+        }
+        return newarr;
+    }
+
+
+    //树形json转单级数组list
+    var changeList=[];
+    function spread(menus) {
+        var menu = {};
+        for (var i = 0; i < menus.length; i++) {
+            menu = menus[i];
+            if (menu.children) {
+                spread(menu.children);
+                delete menu.children;
+                changeList.push(menu)
+            } else {
+//                delete menu.children;
+                changeList.push(menu)
+            }
+        }
+        return changeList;
+    }
+    console.log(jsonRecursion(data));
+    console.log(spread(data));
+</script>
+</body>
+</html>
